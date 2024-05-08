@@ -4,10 +4,18 @@ const LocationsDetails = require("../models/locationsDetails")
 
 module.exports.add_location = asyncHandler(async(req, res, next)=>{
 
-    const { loc_name, lat, lng} = req. body
+    console.log("req", req.body)
+    const { name, lat, lng} = req. body
     try{
+        if(!name || !lat || !lng)
+            {
+                res.status(400)
+                throw new Error("Please add all fields")
+            }
+            else{
+
         const newLocation = await Location.create({
-            Location_Name: loc_name,
+            Location_Name: name,
             Lat: lat,
             Lon: lng
         })
@@ -16,13 +24,13 @@ module.exports.add_location = asyncHandler(async(req, res, next)=>{
         console.log(loc_details)
     
         res.status(201).json(newLocation)
+    }
 
     }catch(error)
     {
         res.status(400)
         throw new Error("Invalid location data")
     }
-   
 })
 
 module.exports.get_location = asyncHandler( async(req, res, next)=>{
@@ -68,3 +76,16 @@ module.exports.update_location = asyncHandler( async(req, res, next)=>{
         throw new Error("Cant find location")
     }
 })
+
+module.exports.delete_Location = asyncHandler(async (req, res, next) => {
+    const LocationName = req.params.name;
+
+    // Find and delete the location by its name
+    const deletedLocation = await Location.findOneAndDelete({ Location_Name: LocationName });
+
+    if (!deletedLocation) {
+        return res.status(404).json({ success: false, message: 'Location not found' });
+    }
+
+    res.status(200).json({ success: true, message: 'Location deleted successfully' });
+});
