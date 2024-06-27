@@ -13,7 +13,7 @@ module.exports.add_new_reading = asyncHandler( async(req, res, next)=>{
     if(location)
     {
         const dateTime = new Date(new Date().getTime() - new Date().getTimezoneOffset()*60000).toISOString();
-
+        
         const [date, time ] = dateTime.split("T")
         const locationReading = await LocationsDetails.create({
             UV_A_Value,

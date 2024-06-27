@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler")
 const jwt = require("jsonwebtoken")
 const User = require("../models/userModel")
 
-
 module.exports.protect = asyncHandler(async(req, res, next)=>{
     try{
         const token = req.cookies.token
@@ -21,6 +20,7 @@ module.exports.protect = asyncHandler(async(req, res, next)=>{
             res.status(401)
             throw new Error("User not found")
         }
+        req.user = user
         next()
     }catch(error)
     {
@@ -28,3 +28,4 @@ module.exports.protect = asyncHandler(async(req, res, next)=>{
         throw new Error("Not authorized, please login")
     }
 })
+
